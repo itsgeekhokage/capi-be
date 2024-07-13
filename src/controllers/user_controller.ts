@@ -138,42 +138,37 @@ const createUsersInBulk = async (
   }
 };
 
+
 const updateUser = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { name, user_id, password, updated_by, role_id, vendor } =
-    req.body;
+  const { name, user_id, password, updated_by, role_id, vendor } = req.body;
 
-  if (
-    !id ||
-    !name ||
-    !user_id ||
-    !password ||
-    !role_id ||
-    !updated_by
-  ) {
+  if (!id || !name || !user_id || !password || !role_id || !updated_by) {
     res.status(400).json({ message: "Invalid input data" });
     return;
   }
 
+  const userId = parseInt(id);
+  const roleId = parseInt(role_id);
+
+  if (isNaN(userId) || isNaN(roleId)) {
+    res.status(400).json({ message: "Invalid ID format" });
+    return;
+  }
+
   try {
-    const user = await userRepo.findOneBy({ id : parseInt(id) });
+    const user = await userRepo.findOneBy({ id: userId });
 
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
     }
 
-    const role = await roleRepo.findOneBy({ id: role_id });
+    const role = await roleRepo.findOneBy({ id: roleId });
     if (!role) {
       res.status(404).json({ message: "Role not found" });
       return;
     }
-
-    // const project = await projectRepo.findOneBy({ id: project_id });
-    // if (!project) {
-    //   res.status(404).json({ message: "Project not found" });
-    //   return;
-    // }
 
     user.name = name;
     user.user_id = user_id;
@@ -183,9 +178,6 @@ const updateUser = async (req: Request, res: Response) => {
     user.vendor = vendor;
 
     await userRepo.save(user);
-
-    // project.users = [...project.users, user];
-    // await projectRepo.save(project);
 
     res.status(200).json({ data: user, message: "User updated successfully." });
   } catch (error) {
