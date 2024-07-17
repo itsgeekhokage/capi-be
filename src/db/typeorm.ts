@@ -9,12 +9,14 @@ import { User } from "../entities/v1/user";
 import { Role } from "../entities/v1/role";
 import { Vendor } from "../entities/v1/vendor";
 
+console.log("username", process.env.username, process.env.password)
+
 export const AppDataSource = new DataSource({
   type: "mysql",
   host: "localhost",
   port: 3306,
-  username: "root",
-  password: "@Shivam123",
+  username: process.env.username,
+  password: process.env.password,
   database: "capi",
   synchronize: true,
   logging: true,
