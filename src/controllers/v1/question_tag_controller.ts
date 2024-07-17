@@ -1,8 +1,8 @@
 /** @format */
 
-import { AppDataSource } from "../db/typeorm";
+import { AppDataSource } from "../../db/typeorm";
 import { Request, Response } from "express";
-import { Question_tag } from "../entities/question_tag";
+import { Question_tag } from "../../entities/v1/question_tag";
 
 const questionTagRepo = AppDataSource.getRepository(Question_tag);
 

@@ -5,7 +5,7 @@ import {
     createNewAccessControl,
     updateAccessControl,
     deleteAccessControl
-} from '../controllers/access_control_controllers';
+} from '../../controllers/v1/access_control_controllers';
 
 const router = express.Router();
 

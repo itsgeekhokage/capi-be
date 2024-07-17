@@ -1,5 +1,9 @@
 import express from "express";
-import { createNewQuestionTag, getAllQuestionTags, updateQuestionTag } from "../controllers/question_tag_controller";
+import {
+  createNewQuestionTag,
+  getAllQuestionTags,
+  updateQuestionTag,
+} from "../../controllers/v1/question_tag_controller";
 
 const router = express.Router();
 

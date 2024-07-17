@@ -1,10 +1,10 @@
 /** @format */
 
 import { Request, Response } from "express";
-import { User } from "../entities/user";
-import { Role } from "../entities/role";
-import { AppDataSource } from "../db/typeorm";
-import { Project } from "../entities/project";
+import { User } from "../../entities/v1/user";
+import { Role } from "../../entities/v1/role";
+import { AppDataSource } from "../../db/typeorm";
+import { Project } from "../../entities/v1/project";
 
 const roleRepo = AppDataSource.getRepository(Role);
 const userRepo = AppDataSource.getRepository(User);

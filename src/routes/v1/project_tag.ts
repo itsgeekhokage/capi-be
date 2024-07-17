@@ -1,5 +1,5 @@
 import express from "express";
-import { createNewProjectTags, getAllProjectTags, updateProjectTag } from "../controllers/project_tag_contoller";
+import { createNewProjectTags, getAllProjectTags, updateProjectTag } from "../../controllers/v1/project_tag_contoller";
 
 const router = express.Router();
 

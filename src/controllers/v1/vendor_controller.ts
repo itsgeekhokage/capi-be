@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { Vendor } from "../entities/vendor";
-import { AppDataSource } from "../db/typeorm";
+import { Vendor } from "../../entities/v1/vendor";
+import { AppDataSource } from "../../db/typeorm";
 
 const vendorRepo = AppDataSource.getRepository(Vendor);
 

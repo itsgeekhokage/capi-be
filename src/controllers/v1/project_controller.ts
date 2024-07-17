@@ -1,7 +1,7 @@
 /** @format */
 
-import { AppDataSource } from "../db/typeorm";
-import { Project } from "../entities/project";
+import { AppDataSource } from "../../db/typeorm";
+import { Project } from "../../entities/v1/project";
 import { Request, Response } from "express";
 
 const projectRepo = AppDataSource.getRepository(Project);

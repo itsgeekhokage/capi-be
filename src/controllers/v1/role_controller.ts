@@ -1,13 +1,12 @@
 /** @format */
 
 import { Request, Response } from "express";
-import { Role } from "../entities/role";
-import { AccessControl } from "../entities/access_control";
-import { AppDataSource } from "../db/typeorm";
+import { Role } from "../../entities/v1/role";
+import { AccessControl } from "../../entities/v1/access_control";
+import { AppDataSource } from "../../db/typeorm";
 
 const roleRepo = AppDataSource.getRepository(Role);
 const accessControlRepo = AppDataSource.getRepository(AccessControl);
-
 
 const getAllRoles = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -21,12 +20,13 @@ const getAllRoles = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-
 const createNewRole = async (req: Request, res: Response): Promise<void> => {
   const { name, controls, updated_by } = req.body;
+  console.log(req.body);
 
   if (!name || !controls || !updated_by) {
-     res.status(400).json({ message: "Invalid input data" });
+    res.status(400).json({ message: "Invalid input data" });
+    return;
   }
 
   try {
@@ -60,9 +60,6 @@ const createNewRole = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-
-
-
 const updateRole = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { name, access_controls, updated_by } = req.body;
@@ -71,16 +68,16 @@ const updateRole = async (req: Request, res: Response) => {
     const role = await roleRepo.findOneBy({ id: parseInt(id) });
 
     const validControls = await Promise.all(
-        access_controls.map(async (controlId: number) => {
-          const control = await accessControlRepo.findOne({
-            where: { id: controlId },
-          });
-          if (!control) {
-            throw new Error(`AccessControl with id ${controlId} not found`);
-          }
-          return control;
-        })
-      );
+      access_controls.map(async (controlId: number) => {
+        const control = await accessControlRepo.findOne({
+          where: { id: controlId },
+        });
+        if (!control) {
+          throw new Error(`AccessControl with id ${controlId} not found`);
+        }
+        return control;
+      })
+    );
 
     if (role) {
       role.name = name;
@@ -141,6 +138,5 @@ const verifyRoles = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 export { getAllRoles, createNewRole, updateRole, deleteRole, verifyRoles };

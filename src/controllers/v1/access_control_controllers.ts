@@ -1,8 +1,8 @@
 /** @format */
 
 import { Request, Response } from "express";
-import { AppDataSource } from "../db/typeorm";
-import { AccessControl } from "../entities/access_control";
+import { AppDataSource } from "../../db/typeorm";
+import { AccessControl } from "../../entities/v1/access_control";
 
 const controlRepo = AppDataSource.getRepository(AccessControl);
 

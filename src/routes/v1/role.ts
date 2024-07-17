@@ -7,7 +7,7 @@ import {
   getAllRoles,
   updateRole,
   verifyRoles,
-} from "../controllers/role_controller";
+} from "../../controllers/v1/role_controller";
 const router = express.Router();
 
 router.get("/get/all", getAllRoles);

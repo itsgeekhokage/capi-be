@@ -1,5 +1,8 @@
 import express from "express";
-import { createNewVendor, getAllVendors } from "../controllers/vendor_controller";
+import {
+  createNewVendor,
+  getAllVendors,
+} from "../../controllers/v1/vendor_controller";
 
 const router = express.Router();
 
