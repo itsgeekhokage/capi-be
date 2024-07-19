@@ -22,6 +22,24 @@ const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
+const getUsersByVendor = async (req : Request, res : Response) => {
+  const  vendor  = req.body;
+
+  if (!vendor) {
+    return res.status(400).json({ message: "Vendor is required" });
+  }
+
+  try {
+    const users = await userRepo.findBy({ vendor: vendor });
+    res
+      .status(200)
+      .json({ data: users, message: "Users fetched successfully..." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 
 const createNewUser = async (req: Request, res: Response) => {
   const { name, user_id, password, updated_by, role_id, project_id, vendor } =
@@ -77,13 +95,9 @@ const createNewUser = async (req: Request, res: Response) => {
   }
 };
 
-const createUsersInBulk = async (
-  req: Request,
-  res: Response
-) => {
-
-  const {users, updated_by} = req.body;
-  console.log(req.body)
+const createUsersInBulk = async (req: Request, res: Response) => {
+  const { users, updated_by } = req.body;
+  console.log(req.body);
 
   if (!Array.isArray(users) || users.length === 0) {
     res.status(400).json({ message: "Invalid input data" });
@@ -94,8 +108,7 @@ const createUsersInBulk = async (
     const newUsers = [];
 
     for (const userData of users) {
-      const { name, user_id, password, vendor } =
-        userData;
+      const { name, user_id, password, vendor } = userData;
       const role_name = userData.role;
 
       if (!name || !user_id || !password || !role_name || !vendor) {
@@ -117,7 +130,7 @@ const createUsersInBulk = async (
         name,
         user_id,
         password,
-        is_active : true,
+        is_active: true,
         org_id: 1,
         vendor,
         updated_by,
@@ -137,7 +150,6 @@ const createUsersInBulk = async (
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 const updateUser = async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -185,6 +197,5 @@ const updateUser = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 export { getAllUsers, createNewUser, createUsersInBulk, updateUser };

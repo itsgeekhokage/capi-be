@@ -9,6 +9,7 @@ import {
 const router = express.Router();
 
 router.get("/get/all", getAllUsers);
+router.get("/get/:vendor", getAllUsers);
 router.post("/create/manual", createNewUser);
 router.post("/create/excel", createUsersInBulk);
 router.put("/update/:id", updateUser);
