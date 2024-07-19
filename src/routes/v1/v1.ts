@@ -8,6 +8,7 @@ import question_tag_route from "./question_tag";
 import project_tag_route from "./project_tag";
 import user_route from "./user";
 import vendor_route from "./vendor";
+import response_route from "./response"
 const router = express.Router();
 
 router.use("/controls", access_control_route);
@@ -17,5 +18,5 @@ router.use("/questiontags", question_tag_route);
 router.use("/projecttags", project_tag_route);
 router.use("/user", user_route);
 router.use("/vendor", vendor_route);
-
+router.use("/response", response_route);
 export default router;
