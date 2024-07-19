@@ -40,14 +40,32 @@ export const updateResponseById = async (req: Request, res: Response) => {
 };
 
 export const createResponse = async (req: Request, res: Response) => {
+
+  const  responses  = req.body;
+  console.log(responses);
   try {
-    const newResponse = new ResponseModel(req.body);
-    const savedResponse = await newResponse.save();
-    res.status(201).json(savedResponse);
+    let savedResponses = [];
+    for (const response of responses) {
+      const newResponse = new ResponseModel(response);
+      const savedResponse = await newResponse.save();
+      if(!savedResponse){
+        console.log("error");
+        return;
+      }
+      savedResponses.push(savedResponse);
+    }
+
+    res
+      .status(201)
+      .json({
+        data: savedResponses,
+        message: "Responses saved successfully...",
+      });
   } catch (error) {
     res.status(500).json({ message: "Error creating response", error });
   }
 };
+
 
 export const deleteResponseById = async (req: Request, res: Response) => {
   try {

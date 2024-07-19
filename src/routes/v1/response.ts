@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.get("/audit/:user_id/:project_code", getResponsesByUserIdAndProjectCode);
 router.put("/update/:response_id", updateResponseById);
-router.post("/create", createResponse);
+router.post("/create/new", createResponse);
 router.delete("/delete/:response_id", deleteResponseById);
 router.get("/audit/single/:response_id", getResponseById);
 

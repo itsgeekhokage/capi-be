@@ -18,5 +18,5 @@ router.use("/questiontags", question_tag_route);
 router.use("/projecttags", project_tag_route);
 router.use("/user", user_route);
 router.use("/vendor", vendor_route);
-router.use("/response", response_route);
+router.use("/responses", response_route);
 export default router;
