@@ -4,14 +4,14 @@ import { Request, Response } from "express";
 import { ResponseModel } from "../../entities/v1/response";
 
 
-export const getResponsesByUserIdAndProjectCode = async (req : Request, res : Response) => {
+export const getResponsesByUserId = async (req : Request, res : Response) => {
   try {
-    const { user_id, project_code } = req.params;
-    const responses = await ResponseModel.find({
+    const user_id  = req.params.id;
+    console.log(req.params);
+    const responses = await ResponseModel.findOne({
       user_id,
-      project_code,
       status: 0,
-    }).limit(10);
+    });
     res.status(200).json({data : responses, message : "responses fetched successfully..."});
   } catch (error) {
     res.status(500).json({ message: "Error fetching responses", error });
@@ -21,11 +21,26 @@ export const getResponsesByUserIdAndProjectCode = async (req : Request, res : Re
 export const updateResponseById = async (req: Request, res: Response) => {
   try {
     const { response_id } = req.params;
-    const updateData = req.body;
+    const {
+      response_time,
+      start_time,
+      end_time,
+      question_disposition,
+      answer_disposition
+    } = req.body;
 
     const updatedResponse = await ResponseModel.findOneAndUpdate(
       { response_id },
-      { ...updateData, status: 1 },
+      {
+        $set: {
+          response_time,
+          start_time,
+          end_time,
+          question_disposition,
+          answer_disposition,
+          status: 1
+        }
+      },
       { new: true }
     );
 
@@ -41,7 +56,7 @@ export const updateResponseById = async (req: Request, res: Response) => {
 
 export const createResponse = async (req: Request, res: Response) => {
 
-  const  responses  = req.body;
+  const responses = req.body;
   console.log(responses);
   try {
     let savedResponses = [];
@@ -65,6 +80,57 @@ export const createResponse = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error creating response", error });
   }
 };
+
+
+const assignResponsesToUsers = async (req : Request, res : Response) => {
+
+  const {project_code, userIds} = req.body;
+  try {
+    const responses = await ResponseModel.find({ project_code: project_code });
+
+    if (responses.length === 0) {
+      return { message: "No responses found for this project code" };
+    }
+
+    if (userIds.length === 0) {
+      return { message: "No users provided" };
+    }
+
+    const numResponses = responses.length;
+    const numUsers = userIds.length;
+
+    const responsesPerUser = Math.floor(numResponses / numUsers);
+    const remainingResponses = numResponses % numUsers;
+
+    let userIndex = 0;
+    let responseIndex = 0;
+
+    while (responseIndex < numResponses) {
+      const currentUser = userIds[userIndex];
+
+      const numToAssign =
+        responsesPerUser + (userIndex < remainingResponses ? 1 : 0);
+
+      for (let i = 0; i < numToAssign; i++) {
+        if (responseIndex < numResponses) {
+          responses[responseIndex].user_id = currentUser;
+          await responses[responseIndex].save();
+          responseIndex++;
+        }
+      }
+
+      userIndex++;
+    }
+
+    res.status(200).json({ message: "Responses assigned successfully" });
+  } catch (error) {
+    console.error("Error assigning responses:", error);
+    return { error: "An error occurred while assigning responses" };
+  }
+};
+
+export default assignResponsesToUsers;
+
 
 
 export const deleteResponseById = async (req: Request, res: Response) => {

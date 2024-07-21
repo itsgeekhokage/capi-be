@@ -23,10 +23,11 @@ const getAllUsers = async (req: Request, res: Response) => {
 };
 
 const getUsersByVendor = async (req : Request, res : Response) => {
-  const  vendor  = req.body;
+  const  vendor  = req.params.vendor;
 
   if (!vendor) {
-    return res.status(400).json({ message: "Vendor is required" });
+    res.status(400).json({ message: "Vendor is required" });
+    return;
   }
 
   try {
@@ -198,4 +199,23 @@ const updateUser = async (req: Request, res: Response) => {
   }
 };
 
-export { getAllUsers, createNewUser, createUsersInBulk, updateUser };
+const loginAuth = async (req: Request, res: Response) => {
+  const {user_id, password} = req.body;
+
+  if (!user_id || !password) {
+    res.status(400).json({ message: "Vendor is required" });
+    return;
+  }
+
+  try {
+    const user = await userRepo.findOneBy({ user_id, password });
+    res
+      .status(200)
+      .json({ data: user, message: "User fetched successfully..." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export { getAllUsers, createNewUser, createUsersInBulk, updateUser, getUsersByVendor, loginAuth };
